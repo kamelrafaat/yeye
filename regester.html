@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>تسجيل عميل جديد</title>
+    <link rel="stylesheet" href="regester.css">
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.2.0/firebase-app.js";
+        import { getAuth, createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/11.2.0/firebase-auth.js";
+        import { getDatabase, ref, set } from "https://www.gstatic.com/firebasejs/11.2.0/firebase-database.js";
+
+        // إعدادات Firebase (نفسها)
+        const firebaseConfig = { 
+            apiKey: "AIzaSyCAwPCVPaxoTEV4n4APATlIKh3ppjMeZpk",
+            authDomain: "data-c4c20.firebaseapp.com",
+            databaseURL: "https://data-c4c20-default-rtdb.firebaseio.com",
+            projectId: "data-c4c20",
+            storageBucket: "data-c4c20.appspot.com",
+            messagingSenderId: "905131784305",
+            appId: "1:905131784305:web:440e06647294b0d5e543d0",
+            measurementId: "G-YYHDVJP2T1"		
+			};
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const database = getDatabase(app);
+
+        // دالة رفع الصورة (نفسها)
+        async function uploadImageToImgBB(imageFile) {
+            const formData = new FormData();
+            formData.append("image", imageFile);
+
+            const response = await fetch("https://api.imgbb.com/1/upload?key=d6b1df3a6b3175d94eb8e9ecdb0efdb2", {
+                method: "POST",
+                body: formData
+            });
+
+            const data = await response.json();
+            if (data.success) {
+                return data.data.url;  // رابط الصورة المرفوعة
+            } else {
+                throw new Error("فشل رفع الصورة");
+            }
+        }
+	
+
+        // تسجيل العميل
+        window.registerUser = async function () {
+            const fullName = document.getElementById('fullName').value.trim();
+            const phoneNumber = document.getElementById('phoneNumber').value.trim();
+            const email = document.getElementById('email').value.trim();
+            const password = document.getElementById('password').value.trim();
+            const profileImage = document.getElementById('profileImage').files[0]; // صورة الملف الشخصي
+            const address = document.getElementById('address').value.trim(); // العنوان
+
+            // عناصر الأخطاء
+            const nameError = document.getElementById('nameError');
+            const phoneError = document.getElementById('phoneError');
+            const emailError = document.getElementById('emailError');
+            const addressError = document.getElementById('addressError');
+
+            // مسح الأخطاء
+            [nameError, phoneError, emailError, addressError].forEach(el => el.textContent = '');
+
+            // التحقق من الحقول المطلوبة
+            if (!fullName || !phoneNumber || !email || !password || !profileImage || !address) {
+                alert('يرجى ملء جميع الحقول.');
+                return;
+            }
+
+            if (phoneNumber.length < 10 || isNaN(phoneNumber)) {
+                phoneError.textContent = 'رقم هاتف غير صحيح!';
+                return;
+            }
+
+            if (password.length < 6) {
+                alert('كلمة المرور يجب أن تكون 6 أحرف على الأقل');
+                return;
+            }
+
+            try {
+                // رفع الصورة
+                const profileImageURL = await uploadImageToImgBB(profileImage);
+
+                // إنشاء الحساب
+                const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+                const user = userCredential.user;
+
+                // حفظ البيانات
+                const userRef = ref(database, 'users/' + user.uid);
+                await set(userRef, {
+                    fullName: fullName,
+                    phoneNumber: phoneNumber,
+                    email: email,
+                    address: address,
+                    profileImageURL: profileImageURL,
+					verificationStatus:"pending",
+                    joinDate: new Date().toISOString() // تاريخ التسجيل
+					
+                });
+
+                alert('تم التسجيل بنجاح!');
+                window.location.href = 'login.html';
+            } catch (error) {
+                console.error('Error:', error);
+                if (error.code === 'auth/email-already-in-use') {
+                    emailError.textContent = 'البريد الإلكتروني مستخدم مسبقًا';
+                } else {
+                    alert('حدث خطأ أثناء التسجيل');
+                }
+            }
+        };
+    </script>
+</head>
+<body>
+    <div class="register-container">
+        <h1>تسجيل عميل جديد</h1>
+        <table>
+            <tr>
+                <td>
+                    <input type="text" id="fullName" placeholder="الاسم الكامل" required />
+                    <small id="nameError" class="error-message"></small>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <input type="text" id="phoneNumber" placeholder="رقم الهاتف" required />
+                    <small id="phoneError" class="error-message"></small>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <input type="email" id="email" placeholder="البريد الإلكتروني" required />
+                    <small id="emailError" class="error-message"></small>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <input type="password" id="password" placeholder="كلمة المرور" required />
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <label for="profileImage">صورة الملف الشخصي:</label>
+                    <input type="file" id="profileImage" accept="image/*" required />
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <input type="text" id="address" placeholder="العنوان" required />
+                    <small id="addressError" class="error-message"></small>
+                </td>
+            </tr>
+            <tr>
+                <td style="text-align: center;">
+                    <button type="button" onclick="registerUser()">تسجيل</button>
+                </td>
+            </tr>
+        </table>
+        <p>لديك حساب؟ <a href="login.html">سجل الدخول</a></p>
+    </div>
+</body>
+</html>

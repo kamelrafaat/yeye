@@ -1,0 +1,64 @@
+/* إضافة هذه الأنماط في قسم ال style */
+.user-controls {
+    display: flex;
+    gap: 15px;
+    align-items: center;
+}
+
+.profile-btn {
+    background: var(--primary-color);
+    padding: 10px;
+    border-radius: 50%;
+    transition: transform 0.3s;
+}
+
+.profile-icon {
+    width: 35px;
+    height: 35px;
+    filter: invert(1);
+}
+
+.logout-btn {
+    background: #ff4444;
+    color: white;
+    padding: 8px 20px;
+    border-radius: 20px;
+    border: none;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+.logout-btn:hover {
+    background: #ff0000;
+    transform: translateY(-2px);
+}
+
+@media (max-width: 768px) {
+    .user-controls {
+        position: fixed;
+        bottom: 80px;
+        right: 20px;
+        flex-direction: column;
+    }
+    
+    .logout-btn {
+        padding: 6px 15px;
+        font-size: 14px;
+    }
+}
+/* إضافة هذه الوسائط في نهاية ال CSS */
+@media (max-width: 480px) {
+    .profile-container {
+        margin: 20px;
+        padding: 15px;
+    }
+    
+    .profile-pic {
+        width: 100px;
+        height: 100px;
+    }
+    
+    .detail-card {
+        padding: 15px;
+    }
+}

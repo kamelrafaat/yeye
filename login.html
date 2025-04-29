@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>تسجيل الدخول</title>
+    <link rel="stylesheet" href="login.css">
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.2.0/firebase-app.js";
+        import { getAuth, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/11.2.0/firebase-auth.js";
+        import { getDatabase, ref, get } from "https://www.gstatic.com/firebasejs/11.2.0/firebase-database.js";
+
+        // تنظيف localStorage في حالة وجود بيانات تالفة
+        function cleanLocalStorage() {
+            try {
+                JSON.parse(localStorage.getItem('userData'));
+            } catch (e) {
+                localStorage.clear();
+            }
+        }
+        cleanLocalStorage();
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyCAwPCVPaxoTEV4n4APATlIKh3ppjMeZpk",
+            authDomain: "data-c4c20.firebaseapp.com",
+            databaseURL: "https://data-c4c20-default-rtdb.firebaseio.com",
+            projectId: "data-c4c20",
+            storageBucket: "data-c4c20.appspot.com",
+            messagingSenderId: "905131784305",
+            appId: "1:905131784305:web:440e06647294b0d5e543d0",
+            measurementId: "G-YYHDVJP2T1"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const database = getDatabase(app);
+
+        // دالة حفظ البيانات مع معالجة الأخطاء
+        function saveUserData(userId) {
+            try {
+                localStorage.setItem('isLoggedIn', 'true');
+                localStorage.setItem('userId', userId);
+                return true;
+            } catch (e) {
+                console.error('فشل في حفظ البيانات:', e);
+                return false;
+            }
+        }
+
+        // دالة تسجيل الدخول المعدلة
+        async function handleLogin() {
+            const email = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+
+            try {
+                const userCredential = await signInWithEmailAndPassword(auth, email, password);
+                const user = userCredential.user;
+                
+                const userRef = ref(database, `users/${user.uid}`);
+                const snapshot = await get(userRef);
+
+                if (!snapshot.exists()) {
+                    throw new Error('المستخدم غير موجود');
+                }
+
+                const userData = snapshot.val();
+                if (userData.verificationStatus !== 'approved') {
+                    alert('الحساب قيد المراجعة');
+                    return;
+                }
+
+                if (saveUserData(user.uid)) {
+                    window.location.href = 'كود برنامج خريطه.html';
+                } else {
+                    alert('حدث خطأ في حفظ بيانات الجلسة');
+                }
+            } catch (error) {
+                console.error('خطأ التسجيل:', error);
+                alert(error.message.includes('invalid-credential') 
+                    ? 'بيانات الدخول غير صحيحة' 
+                    : 'حدث خطأ غير متوقع');
+            }
+        }
+
+        // ربط الحدث بعد تحميل الصفحة
+        window.addEventListener('load', () => {
+            document.getElementById('loginBtn').addEventListener('click', handleLogin);
+        });
+    </script>
+</head>
+<body>
+    <div class="login-container">
+        <h1>تسجيل الدخول</h1>
+        <table>
+            <tr>
+                <td><input type="email" id="username" placeholder="البريد الإلكتروني" required></td>
+            </tr>
+            <tr>
+                <td><input type="password" id="password" placeholder="كلمة المرور" required></td>
+            </tr>
+            <tr>
+                <td style="text-align: center;">
+                    <button type="button" id="loginBtn">تسجيل الدخول</button>
+                </td>
+            </tr>
+        </table>
+        <p>ليس لديك حساب؟ <a href="regester.html">تسجيل مستخدم جديد</a></p>
+    </div>
+</body>
+</html>

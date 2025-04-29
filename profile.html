@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>الملف الشخصي - رايد</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;700&display=swap" rel="stylesheet">
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
+    <style>
+        /* الأنماط تبقى كما هي بدون تغيير */
+        :root {
+            --primary-color: #6C63FF;
+            --secondary-color: #2F2E41;
+            --accent-color: #FF6584;
+            --gradient: linear-gradient(135deg, #6C63FF 0%, #3F3D56 100%);
+        }
+
+        * {
+            box-sizing: border-box;
+            font-family: 'Tajawal', sans-serif;
+        }
+
+        body {
+            margin: 0;
+            background: var(--gradient);
+            min-height: 100vh;
+            color: white;
+        }
+
+        .profile-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 40px 20px;
+            opacity: 0;
+            transform: translateY(20px);
+            animation: fadeIn 0.6s ease-out forwards;
+        }
+
+        .profile-header {
+            text-align: center;
+            position: relative;
+            margin-bottom: 60px;
+        }
+
+        .profile-pic-container {
+            position: relative;
+            display: inline-block;
+            margin-bottom: 25px;
+        }
+
+        .profile-pic {
+            width: 200px;
+            height: 200px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 5px solid rgba(255,255,255,0.1);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            transition: all 0.3s ease;
+        }
+
+        .profile-pic:hover {
+            transform: scale(1.05);
+            box-shadow: 0 15px 40px rgba(0,0,0,0.4);
+        }
+
+        .verification-badge {
+            position: absolute;
+            bottom: 20px;
+            right: 20px;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+        }
+
+        .verification-status {
+            position: absolute;
+            bottom: 20px;
+            left: 20px;
+            padding: 8px 15px;
+            border-radius: 20px;
+            font-size: 0.9em;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .status-pending { background: #ffd700; color: #000; }
+        .status-approved { background: #4CAF50; }
+        .status-rejected { background: #f44336; }
+
+        .profile-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 30px;
+            margin-top: 50px;
+        }
+
+        .stat-card {
+            background: rgba(255,255,255,0.05);
+            backdrop-filter: blur(12px);
+            border-radius: 20px;
+            padding: 30px;
+            border: 1px solid rgba(255,255,255,0.1);
+            transition: transform 0.3s ease;
+            cursor: pointer;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-10px);
+            background: rgba(255,255,255,0.08);
+        }
+
+        .edit-section {
+            background: rgba(255,255,255,0.05);
+            padding: 25px;
+            border-radius: 15px;
+            margin-top: 30px;
+            display: none;
+        }
+
+        .edit-input {
+            background: rgba(255,255,255,0.1);
+            border: 1px solid var(--primary-color);
+            padding: 12px;
+            border-radius: 8px;
+            width: 100%;
+            color: white;
+            margin-bottom: 15px;
+        }
+
+        .logout-btn {
+            display: block;
+            margin: 50px auto 0;
+            padding: 15px 40px;
+            background: rgba(255,255,255,0.1);
+            border: 2px solid var(--accent-color);
+            color: white;
+            border-radius: 30px;
+            font-size: 1.1em;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .logout-btn:hover {
+            background: var(--accent-color);
+            transform: scale(1.05);
+        }
+
+        .notification-banner {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: #ffd700;
+            color: #000;
+            padding: 15px;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        @keyframes fadeIn {
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @media (max-width: 768px) {
+            .profile-pic { width: 150px; height: 150px; }
+            .profile-stats { grid-template-columns: 1fr; }
+        }
+    </style>
+    <script>
+        const firebaseConfig = {
+            apiKey: "AIzaSyCAwPCVPaxoTEV4n4APATlIKh3ppjMeZpk",
+            authDomain: "data-c4c20.firebaseapp.com",
+            databaseURL: "https://data-c4c20-default-rtdb.firebaseio.com",
+            projectId: "data-c4c20",
+            storageBucket: "data-c4c20.firebasestorage.app",
+            messagingSenderId: "905131784305",
+            appId: "1:905131784305:web:440e06647294b0d5e543d0"
+        };
+
+        const app = firebase.initializeApp(firebaseConfig);
+        const database = firebase.database();
+        const auth = firebase.auth();
+
+        let isEditing = false;
+
+        function loadProfile() {
+            const userId = localStorage.getItem('userId');
+            
+            database.ref('users/' + userId).once('value').then(userSnapshot => {
+                const userData = userSnapshot.val();
+                
+                // تحديث البيانات الأساسية
+                document.getElementById('userName').textContent = userData.fullName || 'مستخدم بدون اسم';
+                document.getElementById('userEmail').textContent = userData.email;
+                document.getElementById('userPhone').textContent = userData.phoneNumber || 'لم يتم إضافة رقم';
+                document.getElementById('joinDate').textContent = new Date(userData.joinDate).toLocaleDateString('ar-EG');
+                
+                // تحديث حالة التحقق
+                updateVerificationStatus(userData.verificationStatus);
+                
+                if(userData.verificationStatus === 'pending') {
+                    showNotification('⚠️ الحساب قيد المراجعة - سيتم تفعيله خلال 24 ساعة');
+                }
+
+                // جلب الرحلات المكتملة
+                        // جلب الرحلات المنتهية من المسار الصحيح
+                database.ref('end/' + userId).once('value').then(endRidesSnapshot => {
+                    const completedRidesCount = endRidesSnapshot.numChildren();
+                    document.getElementById('totalRides').textContent = completedRidesCount;
+                  updateProgressBar(completedRidesCount);
+                });
+
+                 if(userData.profileImageURL) {
+                    document.getElementById('profileImage').src = userData.profileImageURL;
+                 }
+            });
+        }
+
+        function updateVerificationStatus(status) {
+            const statusElement = document.getElementById('statusText');
+            const badgeElement = document.getElementById('verificationBadge');
+            
+            const statusMap = {
+                pending: { text: 'قيد المراجعة', color: '#ffd700', icon: '⏳' },
+                approved: { text: 'تم التحقق', color: '#4CAF50', icon: '✓' },
+                rejected: { text: 'مرفوض', color: '#f44336', icon: '✕' }
+            };
+
+            statusElement.textContent = statusMap[status].text;
+            badgeElement.innerHTML = statusMap[status].icon;
+            badgeElement.style.backgroundColor = statusMap[status].color;
+            badgeElement.className = `verification-status status-${status}`;
+        }
+
+        function toggleEditForm() {
+            isEditing = !isEditing;
+            document.getElementById('editSection').style.display = isEditing ? 'block' : 'none';
+            
+            if(isEditing) {
+                document.getElementById('editName').value = document.getElementById('userName').textContent;
+                document.getElementById('editPhone').value = document.getElementById('userPhone').textContent;
+            }
+        }
+
+        function saveChanges() {
+            const userId = localStorage.getItem('userId');
+            const updates = {
+                fullName: document.getElementById('editName').value,
+                phoneNumber: document.getElementById('editPhone').value,
+                verificationStatus: "pending" // إعادة تعيين الحالة
+            };
+
+            database.ref('users/' + userId).update(updates)
+                .then(() => {
+                    showNotification('تم تحديث البيانات بنجاح! سيتم مراجعة التغييرات');
+                    loadProfile();
+                    toggleEditForm();
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    showNotification('حدث خطأ أثناء الحفظ', true);
+                });
+        }
+
+        function showNotification(message, isError = false) {
+            const notification = document.createElement('div');
+            notification.className = 'notification-banner';
+            notification.style.background = isError ? '#f44336' : '#4CAF50';
+            notification.innerHTML = `
+                ${message}
+                <button onclick="this.parentElement.remove()" 
+                    style="background:transparent; border:none; cursor:pointer; color:inherit">
+                    ✕
+                </button>
+            `;
+            
+            document.body.appendChild(notification);
+            setTimeout(() => notification.remove(), 5000);
+        }
+
+        function updateProgressBar(rides) {
+            const progress = Math.min((rides / 100) * 100, 100);
+            document.querySelector('.progress-fill').style.width = `${progress}%`;
+        }
+
+        auth.onAuthStateChanged(user => {
+            if (!user) window.location.href = 'login.html';
+            else loadProfile();
+        });
+
+        function logout() {
+            auth.signOut().then(() => {
+                localStorage.removeItem('userId');
+                window.location.href = 'login.html';
+            });
+        }
+    </script>
+</head>
+<body>
+    <div class="profile-container">
+        <div class="profile-header">
+            <div class="profile-pic-container">
+                <img src="default-avatar.jpg" class="profile-pic" id="profileImage">
+                <div class="verification-badge" id="verificationBadge"></div>
+                <div class="verification-status" id="verificationStatus">
+                    <span>حالة التحقق:</span>
+                    <span id="statusText">تحميل...</span>
+                </div>
+            </div>
+            <h1 id="userName" style="font-size: 2.5em; margin: 0.5em 0;"></h1>
+            <p id="userPhone" style="opacity: 0.9; font-size: 1.1em;"></p>
+            <p id="userEmail" style="opacity: 0.9; font-size: 1.1em;"></p>
+            <button onclick="toggleEditForm()" class="logout-btn" style="margin-top:15px;">تعديل البيانات</button>
+        </div>
+
+        <div class="edit-section" id="editSection">
+            <h3>تعديل البيانات الشخصية</h3>
+            <input type="text" id="editName" class="edit-input" placeholder="الاسم الكامل">
+            <input type="tel" id="editPhone" class="edit-input" placeholder="رقم الهاتف">
+            <button onclick="saveChanges()" class="logout-btn">حفظ التغييرات</button>
+            <button onclick="toggleEditForm()" class="logout-btn" style="background:transparent;border:1px solid #fff">إلغاء</button>
+        </div>
+       <button onclick="window.location.href='كود برنامج خريطه.html'" class="logout-btn" style="margin-top:15px; border-color: var(--primary-color)">
+             الرئيسية
+             <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="white" style="margin-left: 8px;">
+               <path d="M12 2L2 12h3v8h6v-6h2v6h6v-8h3L12 2z"/>
+       </svg>
+       </button>
+        <div class="profile-stats">
+            <div class="stat-card animate__animated animate__fadeInUp">
+                <div class="stat-icon">🚗</div>
+                <h3>الرحلات المكتملة</h3>
+                <p class="stat-value" id="totalRides">0</p>
+                <div class="progress-bar">
+                    <div class="progress-fill"></div>
+                </div>
+            </div>
+
+            <div class="stat-card animate__animated animate__fadeInUp" style="animation-delay: 0.2s">
+                <div class="stat-icon">⭐</div>
+                <h3>التقييم العام</h3>
+                <p class="stat-value" id="userRating">5.0</p>
+                <div class="stars">★★★★★</div>
+            </div>
+
+            <div class="stat-card animate__animated animate__fadeInUp" style="animation-delay: 0.4s">
+                <div class="stat-icon">📅</div>
+                <h3>تاريخ الانضمام</h3>
+                <p class="stat-value" id="joinDate"></p>
+                <div class="progress-bar">
+                    <div class="progress-fill" style="width: 90%"></div>
+                </div>
+            </div>
+        </div>
+
+        <button class="logout-btn" onclick="logout()">
+            تسجيل الخروج
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="white" style="margin-right: 8px;">
+                <path d="M14 8V4l8 8-8 8v-4h-8V8h8zM0 0h12v4H4v16h8v4H0V0z"/>
+            </svg>
+        </button>
+    </div>
+</body>
+</html>
