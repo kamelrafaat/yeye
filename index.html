@@ -2538,6 +2538,12 @@ function createHexagon(lat, lng, radius, color, tripCount) {
 database.ref('rides').on('value', () => {
     drawTripHotspots();
 });
+  function fixHeight() {
+    let vh = window.innerHeight * 0.01;
+    document.documentElement.style.setProperty('--vh', `${vh}px`);
+  }
+  window.addEventListener('resize', fixHeight);
+  window.addEventListener('load', fixHeight);
     </script>
 </body>
 </html>
