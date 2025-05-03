@@ -29,7 +29,7 @@
            overflow: hidden;
              width: 100%;
            height: 100%;
-		     background: #121212; /* لون الخلفية الجديدة */
+		     background: #000; /* لون الخلفية الجديدة */
         }
 
         body {
@@ -90,10 +90,8 @@
             z-index: 1000;
             display: flex;
             gap: 15px;
-            background: rgba(46, 46, 46, 0.9);
             padding: 15px;
             border-radius: 8px;
-            backdrop-filter: blur(5px);
 			z-index: 1000 !important;
         }
 
@@ -219,81 +217,130 @@
 
         }
 
-        .price-options {
-            position: fixed;
-            bottom: 120px;
-            left: 50%;
-            transform: translateX(-50%);
-            z-index: 1000;
-            display: none;
-            gap: 20px;
-            padding: 20px;
-            border-radius: 12px;
-            backdrop-filter: blur(10px);
-		  background: rgba(10, 10, 10, 0.1) !important;
+        /* تصميم حاوية الخيارات الرئيسية */
+/* تنسيق حاوية الخيارات الرئيسية */
+.price-options {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    width: 100vw; /* تغطية العرض الكامل */
+    height: 35vh; /* ارتفاع مناسب للشاشة */
+    background: rgba(15, 15, 15, 0.98);
+    backdrop-filter: blur(15px);
+    border-top: 1px solid rgba(255,255,255,0.1);
+    box-shadow: 0 -8px 30px rgba(0,0,0,0.3);
+    overflow-x: auto;
+    overflow-y: hidden;
+    gap: 15px;
+    padding: 15px;
+    scroll-snap-type: x mandatory;
+    z-index: 1000;
+    transform: none !important;
+}
 
-        }
-
-        .price-option {
-            padding: 20px 30px;
-            border-radius: 8px;
-            cursor: pointer;
-            transition: all 0.3s;
-            text-align: center;
-		      background: rgba(10, 10, 10, 0.1) !important;
-
-            min-width: 180px;
-			
-        }
-         @media (max-width: 768px) {
-  .price-options {
-          flex-direction: row !important;
-    flex-wrap: nowrap !important;
-    min-width: 100% !important;
-    overflow-x: auto !important;
-    padding: 8px !important;
-    gap: 8px !important;
-    justify-content: flex-start !important;
-    bottom: 90px !important;
-    display: nono !important;/* تصحيح الخطأ هنا */
+/* تعديل البطاقات لعرضها بشكل أفقي */
+.price-option {
+    scroll-snap-align: center;
+    flex: 0 0 85%;
+    min-width: 85%;
+    height: 80%;
+    padding: 20px;
+    border-radius: 15px;
     background: rgba(30, 30, 30, 0.95);
-    border-radius: 16px;
-    box-shadow: 0 8px 32px rgba(0,0,0,0.25);
-	
-  }
+    border: 1px solid rgba(255,255,255,0.1);
+    box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+    transition: all 0.3s ease;
+    overflow: hidden;
+}
 
-  .price-options.active {
-    display: flex !important; /* العرض فقط عند التفعيل */
-  }
-  .price-option {
-  
-      z-index: 102 !important;
-    min-width: 140px !important;
-    flex: 0 0 auto !important;
-    padding: 12px 16px !important;
-    font-size: 14px !important;
-    white-space: nowrap !important;
-    border-radius: 10px;
-    background: rgba(255, 255, 255, 0.08);
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  }
+/* تحسين التنسيق الداخلي */
+.price-option h3 {
+    font-size: 1.2rem;
+    margin-bottom: 10px;
+    white-space: nowrap;
+}
 
-  .price-option:hover {
-      flex-grow: 0 !important;
-    min-width: 160px !important;
-    background: linear-gradient(135deg, var(--primary-color), var(--accent-color));
-  }
+.price-option .total-price {
+    font-size: 1.8rem;
+    margin: 15px 0;
+}
 
-  .price-option.selected {
-      z-index: 103 !important;
+/* إصلاح مشكلة التمرير الأفقي */
+.price-options::-webkit-scrollbar {
+    height: 4px;
+}
 
-    flex-grow: 1.2; /* توسيع الخيار المحدد قليلاً */
-    background: linear-gradient(135deg, var(--primary-color), var(--accent-color));
-    color: #fff;
-    border-color: transparent;
-    box-shadow: 0 4px 20px rgba(var(--primary-rgb), 0.4);
-    z-index: 1; /* التأكد من ظهوره فوق العناصر المجاورة */
-  }
+.price-options::-webkit-scrollbar-thumb {
+    background: rgba(0,206,209,0.8);
+    border-radius: 2px;
+}
+/* تنسيق الخيارات للشاشات الصغيرة */
+@media (max-width: 768px) {
+    .price-options {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr); /* 3 أعمدة متساوية */
+        gap: 8px;
+        height: 22vh; 
+        padding: 8px;
+        overflow: visible;
+        box-shadow: none;
+        border-top: none;
+		    bottom: 25vh; /* رفع الحاوية 25% من أسفل الشاشة */
+
+    }
+
+    .price-option {
+        flex: 1;
+        min-width: auto;
+        height: auto;
+        padding: 8px;
+        border-radius: 10px;
+        scroll-snap-align: none;
+    }
+
+    .price-option h3 {
+	    color: #ffffff !important; /* اللون الأبيض */
+    text-shadow: 0 1px 3px rgba(0,0,0,0.3);
+
+        font-size: 0.9rem;
+        flex-direction: column;
+        gap: 4px;
+    }
+
+    .vehicle-icon {
+        font-size: 1.2rem;
+    }
+
+    .total-price {
+        font-size: 1rem;
+        margin: 8px 0;
+    }
+
+    .vehicle-details-short {
+        display: none;
+    }
+}
+
+/* تعديلات إضافية للشاشات الصغيرة جدًا */
+@media (max-width: 480px) {
+    .price-options {
+        grid-template-columns: 1fr; /* عمود واحد */
+        gap: 6px;
+    }
+    
+    .price-option {
+        width: 100%;
+        padding: 10px;
+    }
+    
+    .price-option h3 {
+        font-size: 0.85rem;
+    }
+    
+    .total-price {
+        font-size: 0.9rem;
+    }
 }
 .gm-style-iw-c {
     box-shadow: 0 0 20px rgba(0, 206, 209, 0.5) !important;
@@ -393,6 +440,7 @@
         }
 
         .map-select-btn {
+		
             margin-top: 10px;
             width: 100%;
             padding: 8px;
@@ -555,40 +603,70 @@
     @media (max-width: 768px) {
     .profile-btn {
         position: fixed !important;
-        bottom: 3px !important;
+        bottom: 1px !important;
         left: 15px !important;
         right: auto !important;
         top: auto !important;
         transform: none !important;
         margin: 0 !important;
         z-index: 1001 !important;
-        padding: 4px 5px !important;
+        padding: 10px 5px !important;
         width: auto !important;
-        box-shadow: 0 4px 15px rgba(0,0,0,0.3) !important;
-            background: linear-gradient(45deg, #FF69B4, #FF1493);     /* أو أي لون تفضله */
-
+  background: linear-gradient(
+    135deg,
+    rgba(76, 175, 80, 0.9) 0%,    /* أخضر شفاف */
+    rgba(255, 82, 82, 0.9) 100%   /* أحمر شفاف */
+  ) !important;
+  border: none !important;
+  border-radius: 25px !important;
+  color: white !important;
+  box-shadow: 
+    0 8px 32px rgba(76, 175, 80, 0.3),
+    0 4px 12px rgba(255, 255, 255, 0.1) inset !important;
+  transition: all 0.4s cubic-bezier(0.215, 0.61, 0.355, 1) !important;
+  overflow: hidden !important;
+  backdrop-filter: blur(8px) !important;
+  border: 1px solid rgba(255, 255, 255, 0.2) !important;
     /* حدود متحركة */
-    border: none;
-    position: relative;
-    overflow: hidden;
+   
 	}
-
-    .profile-btn .profile-text {
-        font-size: 14px !important;
-    }
-	.profile-btn:before {
-    content: "";
-    position: absolute;
-    top: -50%;
-    left: -50%;
-    width: 200%;
-    height: 200%;
-    background: linear-gradient(45deg, 
-        transparent, 
-        rgba(255,255,255,0.2), 
-        transparent);
-    transform: rotate(45deg);
-    animation: border-flow 3s linear infinite;
+/* أيقونة البروفيل المعدلة */
+.profile-btn .fa-chevron-left {
+  color: rgba(255, 255, 255, 0.9) !important;
+  transition: all 0.3s ease !important;
+  font-size: 14px !important;
+}
+    .profile-text {
+  position: relative;
+  z-index: 1;
+  text-shadow: 
+    0 2px 4px rgba(0, 0, 0, 0.3),
+    0 0 8px rgba(76, 175, 80, 0.5) !important;
+  transition: all 0.3s ease !important;
+}
+.profile-btn:hover .profile-text {
+  text-shadow: 
+    0 3px 6px rgba(0, 0, 0, 0.4),
+    0 0 12px rgba(255, 82, 82, 0.6) !important;
+}
+	/* تأثير حدود متحركة */
+.profile-btn::before {
+  content: '';
+  position: absolute;
+  top: -2px;
+  left: -2px;
+  right: -2px;
+  bottom: -2px;
+  background: linear-gradient(
+    45deg,
+    #4CAF50 0%,
+    #FF5252 50%,
+    #4CAF50 100%
+  );
+  z-index: -1;
+  border-radius: 25px;
+  animation: border-flow 3s linear infinite;
+  background-size: 200% auto;
 }
 
     .profile-btn i {
@@ -596,8 +674,8 @@
         margin-right: 5px !important;
     }
 	@keyframes border-flow {
-    0% { transform: rotate(45deg) translateX(-50%); }
-    100% { transform: rotate(45deg) translateX(50%); }
+  0% { background-position: 0% center; }
+  100% { background-position: -200% center; }
 }
 
     /* منع تداخل مع الأزرار الأخرى */
@@ -629,6 +707,7 @@
     }
 
 .map-select-btn {
+
     margin-top: 8px;
     padding: 8px;
     font-size: 10px;
@@ -643,16 +722,111 @@
         padding: 3px !important;
     }
 	
+/* تنسيق عام لحقول الإدخال */
+.input-field input {
+  border: 2px solid rgba(76, 175, 80, 0.3) !important; /* أخضر شفاف */
+  transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) !important;
+  box-shadow: 0 2px 8px rgba(76, 175, 80, 0.1) !important;
+}
 
+/* عند التركيز على حقل البداية */
+#origin:focus {
+  border-color: #4CAF50 !important; /* أخضر كامل */
+  box-shadow: 
+    0 0 15px rgba(76, 175, 80, 0.3),
+    inset 0 1px 3px rgba(76, 175, 80, 0.2) !important;
+}
+
+/* عند التركيز على حقل النهاية */
+#destination:focus {
+  border-color: #FF5252 !important; /* أحمر كامل */
+  box-shadow: 
+    0 0 15px rgba(255, 82, 82, 0.3),
+    inset 0 1px 3px rgba(255, 82, 82, 0.2) !important;
+}
+
+/* تأثير تحويم عام */
+.input-field input:hover {
+  border-color: rgba(76, 175, 80, 0.5) !important;
+  transform: translateY(-1px);
+}
+
+/* تأثير تحويم خاص بحقل النهاية */
+#destination:hover {
+  border-color: rgba(255, 82, 82, 0.5) !important;
+}
+
+/* أنيميشن نبضات الحدود */
+@keyframes input-pulse {
+  0% { border-color: rgba(76, 175, 80, 0.3); }
+  50% { border-color: rgba(76, 175, 80, 0.6); }
+  100% { border-color: rgba(76, 175, 80, 0.3); }
+}
+
+.input-field input:not(:focus):hover {
+  animation: input-pulse 1.5s infinite;
+}
+
+/* تصميم البليس هولدر */
+.input-field input::placeholder {
+  color:  #e0e0e0 !important; /* ابيض  */
+  transition: all 0.3s ease;
+}
+
+#destination::placeholder {
+  color: #e0e0e0 !important; /* ابيض  */
+}
+
+/* تأثيرات النص عند الكتابة */
+.input-field input:valid {
+  border-color: rgba(76, 175, 80, 0.8) !important;
+  background: rgba(76, 175, 80, 0.03) !important;
+}
+
+#destination:valid {
+  border-color: rgba(255, 82, 82, 0.8) !important;
+  background: rgba(255, 82, 82, 0.03) !important;
+}
+
+/* حدود مضيئة متقدمة */
+.input-field input {
+  position: relative;
+  overflow: hidden;
+}
+
+.input-field input::after {
+  content: '';
+  position: absolute;
+  top: -2px;
+  left: -2px;
+  right: -2px;
+  bottom: -2px;
+  border: 2px solid;
+  border-radius: 6px;
+  opacity: 0;
+  animation: border-glow 2s infinite;
+}
+
+#origin::after { border-color: #4CAF50; }
+#destination::after { border-color: #FF5252; }
+
+@keyframes border-glow {
+  0% { opacity: 0; }
+  50% { opacity: 0.3; }
+  100% { opacity: 0; }
+}
+
+.input-field input:focus::after {
+  animation: border-glow 1s infinite;
+}
     
         .action-buttons {
 		    z-index: 1003 !important; /* أعلى من كل العناصر */
-
+  background: #000 !important; /* خلفية شفافة خضراء */
           min-width: 100%;
-		  bottom: 40px !important;
+		  bottom: 60px !important;
     padding: 1rem;
     font-size: 14px;
-    background: linear-gradient(135deg, var(--primary), #00B4DB);
     transform: perspective(300px) rotateX(10deg);
       0 10px 25px rgba(0, 206, 209, 0.4),
       inset 0 0 10px rgba(255,255,255,0.2);
@@ -843,6 +1017,101 @@
   transition: .4s;
   border-radius: 34px;
 }
+/* زر تحديد البداية - تدرج أخضر مع تأثير ثلاثي الأبعاد */
+.input-actions button.btn-icon[onclick*="start"] {
+  background: linear-gradient(145deg, #4CAF50, #45a049) !important;
+  border: 2px solid #388E3C !important;
+  color: #000 !important;
+  font-weight: 1000 !important; /* سمك الخط */
+  border-radius: 12px;
+  padding: 12px 25px;
+  box-shadow: 
+    0 4px 15px rgba(76, 175, 80, 0.3),
+    0 2px 5px rgba(0,0,0,0.1) inset !important;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+  overflow: hidden;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+}
+
+.input-actions button.btn-icon[onclick*="end"] {
+  background: linear-gradient(145deg, #FF5252, #e53935) !important;
+  border: 2px solid #D32F2F !important;
+ color: #000 !important;
+  font-weight: 1000 !important; /* سمك الخط */
+  border-radius: 12px;
+  padding: 12px 25px;
+  box-shadow: 
+    0 4px 15px rgba(255, 82, 82, 0.3),
+    0 2px 5px rgba(0,0,0,0.1) inset !important;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+  overflow: hidden;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+}
+
+/* تأثير الإضاءة عند التحويم */
+.input-actions button.btn-icon:hover {
+  transform: translateY(-2px);
+  box-shadow: 
+    0 6px 20px rgba(0,0,0,0.15),
+    0 3px 6px rgba(0,0,0,0.1) inset !important;
+}
+
+/* تأثير الضغط عند النقر */
+.input-actions button.btn-icon:active {
+  transform: translateY(1px);
+  box-shadow: 
+    0 2px 5px rgba(5,3,2,1) inset !important;
+}
+
+/* إضاءة حدود ديناميكية */
+.input-actions button.btn-icon::after {
+  content: '';
+  position: absolute;
+  top: -2px;
+  left: -2px;
+  right: -2px;
+  bottom: -2px;
+  border-radius: 12px;
+  z-index: -1;
+  background: linear-gradient(45deg, 
+    rgba(255,255,255,0.3), 
+    rgba(255,255,255,0.1),
+    transparent);
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+
+.input-actions button.btn-icon:hover::after {
+  opacity: 1;
+}
+
+/* أيقونات متحركة */
+.input-actions button.btn-icon i {
+  transition: transform 0.3s ease;
+  margin-left: 8px;
+}
+
+.input-actions button.btn-icon:hover i {
+  transform: scale(1.2) rotate(-5deg);
+}
+
+/* تأثير إضاءة عند التركيز */
+.input-actions button.btn-icon:focus {
+  outline: none;
+  animation: pulse-glow 1.5s infinite;
+}
+
+@keyframes advanced-vibration {
+  0% { transform: translate(0, 6px) rotate(0); }
+  25% { transform: translate(3px, 6px) rotate(1deg); }
+  50% { transform: translate(-2px, 6px) rotate(-0.5deg); }
+  75% { transform: translate(1px, 6px) rotate(0.5deg); }
+  100% { transform: translate(0, 6px) rotate(0); }
+}
 
 .slider:before {
   position: absolute;
@@ -889,11 +1158,212 @@ input:checked + .slider:before {
     box-shadow: -5px -5px 15px rgba(10, 26, 48, 0.5),
                 5px 5px 15px rgba(0, 0, 0, 0.3) !important;
 }
+    .current-location-btn {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 14px 18px;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 20px;
+    cursor: pointer;
+	  top: 22%;
+        left: 5px;
+      
+  }
+
+ 
+
+  .current-location-btn .icon {
+
+    font-size: 25px;
+  }
+  #priceButton {
+  background: linear-gradient(135deg, 
+    #2c3e50 0%,    /* Dark Blue */
+    #3498db 50%,   /* Royal Blue */
+    #8e44ad 100%) !important; /* Purple */
+  color: #000 !important;
+  border: 2px solid rgba(255,255,255,0.2) !important;
+  border-radius: 15px;
+  box-shadow: 
+    0 8px 32px rgba(44, 62, 80, 0.3),
+    0 4px 12px rgba(255,255,255,0.1) inset;
+  text-shadow: 0 2px 4px rgba(3,0,0,0.3);
+  position: relative;
+  overflow: hidden;
+  transition: all 0.4s cubic-bezier(0.215, 0.61, 0.355, 1);
+}
+
+/* تأثير معدني لزر السعر */
+#priceButton::after {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: linear-gradient(45deg, 
+    transparent 25%,
+    rgba(255,255,255,0.1) 50%,
+    transparent 75%);
+  transform: rotate(45deg);
+  animation: price-shine 4s infinite linear;
+}
+
+@keyframes price-shine {
+  0% { transform: translateX(-100%) rotate(45deg); }
+  100% { transform: translateX(100%) rotate(45deg); }
+}
+/* زر المسح - تصميم داينميكي */
+button[onclick="clearAll()"] {
+  background: linear-gradient(135deg,
+    #2d3436 0%,    /* Dark Gray */
+    #636e72 100%) !important; /* Gray */
+  color: #dfe6e9 !important;
+  border: 2px solid #d63031 !important; /* Red Accent */
+  border-radius: 15px;
+  box-shadow: 
+    0 8px 32px rgba(45, 52, 54, 0.3),
+    0 4px 12px rgba(255,255,255,0.05) inset;
+  transition: all 0.3s ease-in-out;
+}
+
+/* تأثيرات التحويم */
+#priceButton:hover {
+  transform: translateY(-3px) scale(1.05);
+  box-shadow: 
+    0 12px 40px rgba(44, 62, 80, 0.5),
+    0 6px 20px rgba(255,255,255,0.15) inset;
+}
+
+button[onclick="clearAll()"]:hover {
+  background: linear-gradient(135deg,
+    #d63031 0%,    /* Red */
+    #2d3436 100%) !important;
+  border-color: #ff7675 !important; /* Light Red */
+  color: white !important;
+}
+
+/* تأثيرات الضغط */
+#priceButton:active {
+  transform: translateY(6px) scale(0.96);
+  filter: brightness(1.2);
+}
+
+button[onclick="clearAll()"]:active {
+  transform: translateY(4px);
+  background: linear-gradient(135deg,
+    #c23616 0%,    /* Dark Red */
+    #2d3436 100%) !important;
+}
+
+/* أنيميشن نبض لزر السعر */
+@keyframes price-pulse {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.02); }
+  100% { transform: scale(1); }
+}
+
+#priceButton {
+  animation: price-pulse 2.5s ease-in-out infinite;
+}
+
+/* إضاءة حدود تفاعلية */
+button[onclick="clearAll()"] {
+  position: relative;
+}
+
+button[onclick="clearAll()"]::before {
+  content: '';
+  position: absolute;
+  top: -2px;
+  left: -2px;
+  right: -2px;
+  bottom: -2px;
+  border-radius: 15px;
+  border: 2px solid rgba(214, 48, 49, 0.4);
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+
+button[onclick="clearAll()"]:hover::before {
+  opacity: 1;
+}
+.notification {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    padding: 15px 25px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    backdrop-filter: blur(10px);
+    z-index: 5000;
+    transition: all 0.3s ease;
+    opacity: 1;
+}
+
+.notification.success {
+    background: rgba(0, 206, 209, 0.9);
+    border: 1px solid #00CED1;
+    color: #fff;
+}
+
+.notification.error {
+    background: rgba(255, 68, 68, 0.9);
+    border: 1px solid #ff4444;
+    color: #fff;
+}
+
+.notification-icon {
+    font-size: 24px;
+}
+
+.notification-text {
+    font-size: 16px;
+    line-height: 1.4;
+}
+.input-field.invalid {
+    animation: shake 0.5s;
+    border: 2px solid #ff4444 !important;
+    box-shadow: 0 0 10px rgba(255, 68, 68, 0.3) !important;
+}
+
+@keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    25% { transform: translateX(5px); }
+    75% { transform: translateX(-5px); }
+}
+.price-option .total-price {
+    color: var(--accent-color);
+    font-weight: bold;
+    margin-top: 8px;
+}
+
+.vehicle-total {
+    font-size: 1.2em;
+    color: #00CED1;
+}
+
+#priceDisplay {
+    background: rgba(255,255,255,0.1);
+    padding: 15px;
+    border-radius: 8px;
+    margin: 15px 0;
+}
+
+#priceDisplay p {
+    margin: 10px 0;
+    font-size: 16px;
+}
+
     </style>
 </head>
 <body>
      <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <div class="control-panel">
 	<div class="control-panel">
     <div class="user-controls">
        <button class="profile-btn" onclick="window.location.href='profile.html'">
@@ -901,18 +1371,37 @@ input:checked + .slider:before {
     <i class="fas fa-chevron-left"></i> <!-- سهم للأنيميشن -->
 </button>
     </div>
-        <div class="input-field">
-            <div style="position: relative;">
-                <input type="text" id="origin" placeholder="📍 الموقع الحالي">
-                <button class="current-location-btn" onclick="getCurrentLocation()">📍</button>
+        <div class="control-panel">
+    <div class="input-field">
+	
+        <div class="input-with-actions">
+                <button class="current-location-btn" onclick="getCurrentLocation()">🎯</button>
+            <input type="text" id="origin" placeholder="🟢 نقطه البدايه">
+
+            <div class="input-actions">
+                <button class="btn-icon map-select-btn" onclick="setSelectionMode('start')">
+                    <i class="fas fa-map-marker-alt"></i>
+                    اختيار من الخريطة
+                </button>
+                <button class="btn-icon current-location-btn" onclick="getCurrentLocation()">
+                    <i class="fas fa-location-arrow"></i>
+                </button>
             </div>
-            <button class="btn map-select-btn" onclick="setSelectionMode('start')">اختر نقطة البداية من الخريطة</button>
-        </div>
-        <div class="input-field">
-            <input type="text" id="destination" placeholder="🏁 الوجهة النهائية">
-            <button class="btn map-select-btn" onclick="setSelectionMode('end')">اختر نقطة النهاية من الخريطة</button>
         </div>
     </div>
+    
+    <div class="input-field">
+        <div class="input-with-actions">
+            <input type="text" id="destination" placeholder="🔴 نقطه النهايه ">
+            <div class="input-actions">
+                <button class="btn-icon map-select-btn" onclick="setSelectionMode('end')">
+                    <i class="fas fa-map-marker-alt"></i>
+                    اختيار من الخريطة
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
 
     <div class="action-buttons">
         <button class="btn" id="priceButton" onclick="calculateRoute()">السعر</button>
@@ -930,26 +1419,24 @@ input:checked + .slider:before {
 </div>
 
     <div class="route-info" id="routeInfo"></div>
-    <div class="price-options" id="priceOptions">
-        <div class="price-option" onclick="selectVehicle('normal', 5)">
-            <h3>🚗 عادية</h3>
-            <p>5 جنيه/كم</p>
-        </div>
-        <div class="price-option" onclick="selectVehicle('luxury', 10)">
-            <h3>🚕 فاخرة</h3>
-            <p>10 جنيه/كم</p>
-        </div>
-        <div class="price-option" onclick="selectVehicle('helicopter', 3)">
-            <h3>🚁 طائرة</h3>
-            <p>3 جنيه/كم</p>
-        </div>
+     <div class="price-options" id="priceOptions">
+    <div class="price-option" onclick="selectVehicle('normal', 5)">
+        <h3>🚗 عادية</h3>
+        <p class="total-price">0 جنيه</p>
     </div>
+    <div class="price-option" onclick="selectVehicle('luxury', 10)">
+        <h3>🚕 فاخرة</h3>
+        <p class="total-price">0 جنيه</p>
+    </div>
+    <div class="price-option" onclick="selectVehicle('helicopter', 3)">
+        <h3>🛵 سكوتر</h3>
+        <p class="total-price">0 جنيه</p>
+    </div>
+</div>
 
     <div id="map"></div>
 
     <div class="booking-details" id="bookingDetails">
-        <h2 style="margin-bottom: 20px;">تفاصيل الرحلة</h2>
-        <div id="priceDisplay" style="font-size: 18px;"></div>
 		    <div class="payment-options" id="paymentOptions">
         <div class="payment-option" onclick="selectPayment('electronic', event)">
             <h3>💳 الدفع الإلكتروني مع الكابتن</h3>
@@ -1028,7 +1515,9 @@ input:checked + .slider:before {
 	   let isGhostCleaned = false;
            let driverMarker = null;
 		   let isTripActive = false;
+		   
 
+        let tempMarker = null;
 	   let originalMapState = {
        height: '',
        width: '',
@@ -1039,6 +1528,9 @@ input:checked + .slider:before {
        left: ''
         };
 		
+		    document.getElementById('priceOptions').style.display = 'none';
+
+
 // التحقق من تسجيل الدخول عند تحميل الصفحة
         document.addEventListener('DOMContentLoaded', () => {
             const isLoggedIn = localStorage.getItem('isLoggedIn');
@@ -1149,26 +1641,83 @@ input:checked + .slider:before {
                     }
                 ]
             };
- function initMap() {
-            // تهيئة الخريطة
-            const savedTheme = localStorage.getItem('mapTheme') || 'night';
-            map = new google.maps.Map(document.getElementById('map'), {
-                center: { lat: 30.0444, lng: 31.2357 },
-                zoom: 15,
-                styles: mapStyles[savedTheme],
-                disableDefaultUI: true,
-                gestureHandling: "greedy",
-                mapTypeControlOptions: {
-                    mapTypeIds: []
-                }
-            });
+ // الدالة الرئيسية لتهيئة الخريطة - تحتاج للتعديل
+function initMap() {
+    // محاولة الحصول على الموقع الحالي أولاً
+	    // تهيئة الخريطة مباشرة بإحداثيات افتراضية
+    const defaultCenter = { lat: 30.0444, lng: 31.2357 }; // إحداثيات القاهرة
+    initializeMap(defaultCenter);
+    
+        getCurrentLocationSilently();
 
-            // تهيئة العناصر
-            initializeMapComponents();
-            setupThemeToggle(savedTheme);
-            setupAutocomplete();
-            setupEventListeners();
+    }
+async function getCurrentLocationSilently() {
+    if (!navigator.geolocation) return;
+    
+    try {
+        const position = await new Promise((resolve, reject) => {
+            navigator.geolocation.getCurrentPosition(resolve, reject, {
+                enableHighAccuracy: true,
+                timeout: 5000,
+                maximumAge: 30000
+            });
+        });
+        
+        // تحديث الخريطة بعد الحصول على الإحداثيات
+        const userLocation = {
+            lat: position.coords.latitude,
+            lng: position.coords.longitude
+        };
+        map.setCenter(userLocation);
+        startMarker.setPosition(userLocation);
+        startMarker.setMap(map);
+        
+        // تحديث العنوان في الخلفية دون انتظار
+        updateAddressAsync(userLocation);
+        
+    } catch (error) {
+        console.log('الموقع الحالي غير متاح، استخدام الموقع الافتراضي');
+    }
+}
+
+async function updateAddressAsync(location) {
+    try {
+        const results = await new Promise((resolve, reject) => {
+            geocoder.geocode({ location }, (results, status) => {
+                status === 'OK' ? resolve(results) : reject(status);
+            });
+        });
+        document.getElementById('origin').value = results[0]?.formatted_address || "الموقع الحالي";
+    } catch (error) {
+        console.log('فشل في الحصول على العنوان');
+    }
+}
+// دالة مساعدة لتهيئة الخريطة - جديدة
+function initializeMap(center) {
+    const savedTheme = localStorage.getItem('mapTheme') || 'night';
+    map = new google.maps.Map(document.getElementById('map'), {
+        center: center,
+        zoom: 15,
+        styles: mapStyles[savedTheme],
+        disableDefaultUI: true,
+        gestureHandling: "greedy",
+        mapTypeControlOptions: {
+            mapTypeIds: []
         }
+    });
+
+    // تهيئة باقي العناصر
+    initializeMapComponents();
+    setupThemeToggle(savedTheme);
+    setupAutocomplete();
+    setupEventListeners();
+    
+    // إضافة علامة الموقع الحالي إذا كان مختلفًا عن الافتراضي
+    if (center.lat !== 30.0444) {
+        startMarker.setPosition(center);
+        startMarker.setMap(map);
+    }
+}
 
         function initializeMapComponents() {
             geocoder = new google.maps.Geocoder();
@@ -1212,6 +1761,76 @@ input:checked + .slider:before {
                 trafficLayer.setMap(map);
             }, 60000);
         }
+		// دالة التحقق من صحة المدخلات
+async function validateInputs() {
+    const origin = document.getElementById('origin').value;
+    const destination = document.getElementById('destination').value;
+    
+    // التحقق من عدم الفراغ
+    if (!origin && !currentLocationCoords) {
+        showNotification('الرجاء تحديد نقطة البداية', true);
+        document.getElementById('origin').parentNode.style.border = "2px solid #ff4444";
+        return false;
+    }
+    
+    if (!destination) {
+        showNotification('الرجاء تحديد نقطة النهاية', true);
+        document.getElementById('destination').parentNode.style.border = "2px solid #ff4444";
+        return false;
+    }
+
+    // التحقق من صحة العناوين
+    try {
+        if (!currentLocationCoords) {
+            const originGeo = await geocodeAddress(origin);
+            if (!originGeo) {
+                showNotification('عنوان البداية غير صحيح', true);
+                document.getElementById('origin').parentNode.style.border = "2px solid #ff4444";
+                return false;
+            }
+        }
+        
+        const destGeo = await geocodeAddress(destination);
+        if (!destGeo) {
+            showNotification('عنوان النهاية غير صحيح', true);
+            document.getElementById('destination').parentNode.style.border = "2px solid #ff4444";
+            return false;
+        }
+        
+        return true;
+    } catch (error) {
+        console.error('Validation error:', error);
+        showNotification('حدث خطأ أثناء التحقق من العناوين', true);
+        return false;
+    }
+}
+
+// دالة مساعدة للجيوكود
+function geocodeAddress(address) {
+    return new Promise((resolve, reject) => {
+        geocoder.geocode({ address }, (results, status) => {
+            if (status === 'OK' && results[0]) {
+                resolve(results[0].geometry.location);
+            } else {
+                resolve(null);
+            }
+        });
+    });
+}
+function showNotification(message, isError = false) {
+    const notification = document.createElement('div');
+    notification.className = `notification ${isError ? 'error' : 'success'}`;
+    notification.innerHTML = `
+        <div class="notification-icon">${isError ? '⚠️' : '✅'}</div>
+        <div class="notification-text">${message}</div>
+    `;
+    document.body.appendChild(notification);
+    
+    setTimeout(() => {
+        notification.style.opacity = '0';
+        setTimeout(() => notification.remove(), 300);
+    }, 4000);
+}
 
         function createMarker(color, scale) {
             return new google.maps.Marker({
@@ -1310,45 +1929,96 @@ input:checked + .slider:before {
 			// في بداية ملف الخريطة
 
       function handleMapClick(latLng) {
-    geocoder.geocode({ location: latLng }, (results, status) => {
-        if (status === 'OK' && results[0]) { // تغيير 'ok' إلى 'OK'
-            const address = results[0].formatted_address;
-            
-            if (selectionMode === 'start') {
-                document.getElementById('origin').value = address;
-                startMarker.setPosition(latLng);
-                startMarker.setMap(map);
-                startMarker.setVisible(true); // جعل العلامة مرئية
-                map.panTo(latLng);
-            } else {
-                document.getElementById('destination').value = address;
-                endMarker.setPosition(latLng);
-                endMarker.setMap(map);
-                endMarker.setVisible(true); // جعل العلامة مرئية
-                map.panTo(latLng);
-            }
-            
-            // إضافة تأثير مرئي
-            const tempCircle = new google.maps.Circle({
-                strokeColor: '#FF0000',
-                strokeOpacity: 0.8,
-                strokeWeight: 2,
-                fillColor: '#FF0000',
-                fillOpacity: 0.35,
-                map: map,
-                center: latLng,
-                radius: 20,
-                zIndex: 999
-            });
-            
-            setTimeout(() => tempCircle.setMap(null), 500);
-            
-            selectionMode = null;
-            showNotification('تم تحديد الموقع بنجاح!', false);
-        } else {
-            showNotification('تعذر العثور على عنوان لهذا الموقع', true);
-        }
+        if (!selectionMode) return;
+
+    // إزالة العلامة المؤقتة السابقة
+    if (tempMarker) tempMarker.setMap(null);
+
+    // إنشاء علامة مؤقتة مع تأثير
+    tempMarker = new google.maps.Marker({
+        position: latLng,
+        map: map,
+        icon: {
+            path: google.maps.SymbolPath.CIRCLE,
+            scale: 12,
+            fillColor: selectionMode === 'start' ? '#4CAF50' : '#FF5252',
+            fillOpacity: 0.8,
+            strokeColor: '#fff',
+            strokeWeight: 2
+        },
+        animation: google.maps.Animation.DROP,
+        zIndex: 999
     });
+
+    // عرض تفاصيل الموقع
+    const geocoder = new google.maps.Geocoder();
+    geocoder.geocode({location: latLng}, (results, status) => {
+        const address = status === 'OK' && results[0] ? 
+            results[0].formatted_address : 
+            'موقع غير معروف';
+
+        const infoWindow = new google.maps.InfoWindow({
+            content: `
+                <div class="location-info">
+                    <h3>${selectionMode === 'start' ? 'بداية الرحلة' : 'نهاية الرحلة'}</h3>
+                    <p>${address}</p>
+                    <button onclick="confirmLocation('${selectionMode}')">
+                        تأكيد هذا الموقع
+                    </button>
+                </div>
+            `
+        });
+        
+        infoWindow.open(map, tempMarker);
+    });
+}
+function confirmLocation(mode) {
+    if (!tempMarker) return;
+
+    const position = tempMarker.getPosition();
+    const fieldId = mode === 'start' ? 'origin' : 'destination';
+    
+    // تحديث الحقل المعني
+    document.getElementById(fieldId).value = 'جاري تحديد العنوان...';
+    
+    // البحث العكسي للحصول على العنوان
+    new google.maps.Geocoder().geocode({location: position}, (results) => {
+        if (results[0]) {
+            document.getElementById(fieldId).value = results[0].formatted_address;
+            
+            // تحديث العلامة الدائمة
+            if (mode === 'start') {
+                startMarker.setPosition(position);
+                startMarker.setMap(map);
+            } else {
+                endMarker.setPosition(position);
+                endMarker.setMap(map);
+            }
+        }
+        
+        // تنظيف المؤقتات
+        tempMarker.setMap(null);
+        map.setOptions({draggableCursor: 'grab'});
+        selectionMode = null;
+    });
+}
+// دالة معالجة أخطاء الموقع - جديدة
+function handleGeolocationError(error) {
+    let message = '';
+    switch(error.code) {
+        case error.PERMISSION_DENIED:
+            message = 'تم رفض طلب الحصول على الموقع';
+            break;
+        case error.POSITION_UNAVAILABLE:
+            message = 'معلومات الموقع غير متوفرة';
+            break;
+        case error.TIMEOUT:
+            message = 'انتهت المهلة المحددة للحصول على الموقع';
+            break;
+        default:
+            message = 'حدث خطأ غير معروف أثناء الحصول على الموقع';
+    }
+    showNotification(message, true);
 }
 		 function confirmRide() {
               document.getElementById('persistentNotification').style.display = 'none';
@@ -1412,11 +2082,25 @@ input:checked + .slider:before {
 }
 
         function setSelectionMode(mode) {
-            selectionMode = mode;
-            showNotification(`الرجاء النقر على الخريطة لاختيار نقطة ${mode === 'start' ? 'البداية' : 'النهاية'}`);
-        }
+             selectionMode = mode;
+    document.querySelectorAll('.map-select-btn').forEach(btn => 
+        btn.classList.remove('active'));
+    document.querySelector(`[onclick="setSelectionMode('${mode}')"]`)
+        .classList.add('active');
+    
+    // تغيير شكل المؤشر
+    map.setOptions({draggableCursor: 'crosshair'});
+    showNotification(`انقر على الخريطة لتحديد ${mode === 'start' ? 'نقطة البداية' : 'نقطة النهاية'}`);
+}
 
         async function calculateRoute() {
+		    document.querySelectorAll('.input-field').forEach(field => {
+        field.style.border = "none";
+    });
+
+    // التحقق من الصحة
+    const isValid = await validateInputs();
+    if (!isValid) return;
 		    const mapElement = document.getElementById('map');
     originalMapState = {
         height: mapElement.style.height,
@@ -1491,18 +2175,24 @@ input:checked + .slider:before {
         // حساب المسافة والسعر
         const route = response.routes[0].legs[0];
         totalDistance = route.distance.value / 1000;
-        
+            updatePriceOptions(totalDistance);
+
         // عرض خيارات السعر
         document.getElementById('priceOptions').style.display = 'block';
         document.querySelectorAll('.input-field').forEach(field => {
             field.style.display = 'none';
         });
-
         // تحديث واجهة المستخدم
         map.fitBounds(response.routes[0].bounds);
         startMarker.setPosition(originLocation);
         endMarker.setPosition(destinationResult);
-
+        totalDistance = route.distance.value / 1000; // المسافة بالكيلومترات
+        
+        // تحديث الأسعار بناء على المسافة
+        updatePriceOptions(totalDistance);
+        
+        // عرض خيارات السعر
+        document.getElementById('priceOptions').style.display = 'flex';
     } catch (error) {
         console.error('Error:', error);
         showNotification('فشل في حساب المسار: ' + error.message, true);
@@ -1510,18 +2200,42 @@ input:checked + .slider:before {
         showLoading(false);
     }
 }
+function updatePriceOptions(distance) {
+     const vehicles = {
+        normal: 5,
+        luxury: 10,
+        helicopter: 3
+    };
+
+    Object.entries(vehicles).forEach(([type, price]) => {
+        const total = (distance * price).toFixed(1);
+        document.querySelector(`[onclick="selectVehicle('${type}', ${price})"] .total-price`).textContent = `${total} جنيه`;
+    });
+}
 
         function selectVehicle(type, price) {
             selectedVehicle = type;
             currentPricePerKm = price;
-            
+                const totalPrice = (totalDistance * currentPricePerKm).toFixed(1);
+
             document.querySelectorAll('.price-option').forEach(option => {
                 option.classList.remove('selected');
             });
             event.currentTarget.classList.add('selected');
             
-            showBookingDetails();
-        }
+             
+
+		      // إظهار قسم تفاصيل الحجز وخيارات الدفع
+    document.getElementById('bookingDetails').style.display = 'block';
+    document.getElementById('priceOptions').style.display = 'none';
+    
+    // إعادة تعيين خيارات الدفع
+    document.querySelectorAll('.payment-option').forEach(option => {
+        option.classList.remove('selected');
+    });
+    document.getElementById('confirmBookingButton').style.display = 'none';
+    selectedPayment = null;
+}
 
         function showBookingDetails() {
             const totalPrice = (totalDistance * currentPricePerKm).toFixed(2);
@@ -1652,7 +2366,6 @@ window.addEventListener('load', () => {
     // تفعيل إضافي عند أي تفاعل مستخدم
     document.addEventListener('click', enableWakeLock);
     document.addEventListener('touchstart', enableWakeLock);
-    document.addEventListener('keydown', enableWakeWakeLock);
 });
 
 // Optional: إيقاف المنع عند إغلاق الصفحة
@@ -2941,7 +3654,9 @@ function cleanGhostMapElements() {
            navigator.geolocation.clearWatch(liveLocationWatcher);
           liveLocationWatcher = null;
            }
-		}
+          location.reload();
+	
+	}
 
         function getVehicleName(type) {
             const vehicles = {
