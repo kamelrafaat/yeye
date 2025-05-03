@@ -1,12 +1,14 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
+
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>نظام التاكسي الذكي</title>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
     <style>
+	/* === المتغيرات === */
         :root {
             --primary-color: #00CED1;
             --secondary-color: #2E2E2E;
@@ -15,14 +17,13 @@
 			 --neon-glow: 0 0 15px var(--primary);  /* تأثير إضاءة */
              --gradient: linear-gradient(135deg, var(--primary) 0%, #4FACFE 100%);
         }
-
+		/* === الإعدادات الأساسية === */
         * {
             box-sizing: border-box;
             font-family: 'Tajawal', sans-serif;
             margin: 0;
             padding: 0;
         }
-
         html, body {
 		 	  margin: 0 !important;
              padding: 0 !important;
@@ -31,15 +32,14 @@
            height: 100%;
 		     background: #000; /* لون الخلفية الجديدة */
         }
-
-        body {
+         body {
             background: var(--bg-);
             color: var(--text);
 		    position: relative;
              min-height: 100vh;
 			   overflow-x: hidden;
         }
-
+            /* === لوحة التحكم === */
         .control-panel {
             position: fixed;
             top: 0px;
@@ -54,15 +54,15 @@
             justify-content: space-between;
             align-items: flex-start;
         }
-
+        /* === حقول الإدخال === */
         .input-field {
 		  flex: 1;
-  min-width: 280px;
-  background: var(--glass-bg);
-  border-radius: 15px;
-  padding: 1rem;
-  position: relative;
-  transform-style: preserve-3d;
+          min-width: 280px;
+          background: var(--glass-bg);
+          border-radius: 15px;
+          padding: 1rem;
+          position: relative;
+          transform-style: preserve-3d;
         }
 
         .input-field input {
@@ -81,7 +81,7 @@
             border-color: var(--accent-color);
 			
         }
-
+          /* === أزرار التحكم === */
         .action-buttons {
             position: fixed;
             bottom: 30px;
@@ -106,103 +106,103 @@
             min-width: 150px;
             font-size: 16px;
 			  /* التدرج اللوني */
-  background: linear-gradient(135deg, #FFD700, #D4AF37);
-  color: #000;
+            background: linear-gradient(135deg, #FFD700, #D4AF37);
+             color: #000;
   
-  /* الظل */
-  transform: perspective(500px) rotateX(15deg);
-  box-shadow: 0 20px 40px rgba(0,0,0,0.3);
-  /* التأثيرات التفاعلية */
-  position: relative;
-  overflow: hidden;
+            /* الظل */
+          transform: perspective(500px) rotateX(15deg);
+          box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+          /* التأثيرات التفاعلية */
+          position: relative;
+           overflow: hidden;
         }
 
-/* تأثير الإضاءة عند التحويم */
-.btn::after {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: -100%;
-  width: 100%;
-  height: 100%;
-  background: linear-gradient(
-    90deg,
-    transparent,
-    rgba(255, 255, 255, 0.25),
-    transparent
-  );
-  transition: 0.75s;
-}
+       /* تأثير الإضاءة عند التحويم */
+        .btn::after {
+           content: '';
+           position: absolute;
+           top: 0;
+           left: -100%;
+          width: 100%;
+          height: 100%;
+          background: linear-gradient(
+          90deg,
+          transparent,
+          rgba(255, 255, 255, 0.25),
+          transparent
+           );
+          transition: 0.75s;
+        }
         .btn:hover {
             transform: translateY(-2px);
             box-shadow: 0 4px 15px rgba(0, 206, 209, 0.4);
         }
-.btn:hover::after {
-  left: 100%;
-}
+        .btn:hover::after {
+           left: 100%;
+        }
 /* أزرار مع أيقونات */
-.btn-icon {
-  display: inline-flex;
-  align-items: center;
-  gap: 12px;
-  padding: 12px 28px;
-}
+        .btn-icon {
+            display: inline-flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 28px;
+        }
 
-.btn-icon i {
-  font-size: 1.1em;
-  transition: transform 0.3s ease;
-}
+        .btn-icon i {
+           font-size: 1.1em;
+            transition: transform 0.3s ease;
+        }
 
-.btn-icon:hover i {
-  transform: translateX(5px);
-}
+        .btn-icon:hover i {
+           transform: translateX(5px);
+        }
 
 /* أزرار التحميل */
-.btn-loading {
-  position: relative;
-  pointer-events: none;
-}
+        .btn-loading { 
+             position: relative;
+           pointer-events: none;
+        }
 
-.btn-loading::after {
-  content: '';
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  width: 24px;
-  height: 24px;
-  border: 3px solid rgba(255, 255, 255, 0.3);
-  border-top-color: #fff;
-  border-radius: 50%;
-  animation: spin 1s linear infinite;
-  transform: translate(-50%, -50%);
-}
+        .btn-loading::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+           left: 50%;
+           width: 24px;
+           height: 24px;
+            border: 3px solid rgba(255, 255, 255, 0.3);
+            border-top-color: #fff;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            transform: translate(-50%, -50%);
+        }
 
-@keyframes spin {
-  to { transform: translate(-50%, -50%) rotate(360deg); }
-}
+        @keyframes spin {
+               to { transform: translate(-50%, -50%) rotate(360deg); }
+        }
+		/* === الخريطة === */
         #map {
-  height: 65vh;
-  width: 90%;
-  margin: 6rem auto 2rem;
-  border-radius: 20px;
-  overflow: hidden;
-  border: 1.5px solid var(--primary);
-  box-shadow:
-    0 0 20px var(--primary),
-    0 8px 24px rgba(0, 0, 0, 0.5);
-  backdrop-filter: blur(6px);
-  transition: all 0.3s ease-in-out;
-}
-.gm-style .gm-style-iw-c {
-    background: #0a1a30 !important;
-    color: #aec9d1 !important;
-    border-radius: 12px !important;
-    box-shadow: 0 5px 15px rgba(0,0,0,0.4) !important;
-}
+           height: 60vh;  
+           width: 90%;
+           margin: 6rem auto 2rem;
+           border-radius: 20px;
+          overflow: hidden;
+           border: 1.5px solid var(--primary);
+          box-shadow: 0 0 2px var(--primary-color), 0 8px 24px rgba(0, 0, 0, 0.5);
+          backdrop-filter: blur(6px);
+           transition: all 0.3s ease-in-out;
+        }
+       .gm-style .gm-style-iw-c {
+          background: #0a1a30 !important;
+           color: #aec9d1 !important;
+           border-radius: 12px !important;
+           box-shadow: 0 5px 15px rgba(0,0,0,0.4) !important;
+        }
 
-.gm-style .gm-style-iw-t::after {
-    background: #0a1a30 !important;
-}
+        .gm-style .gm-style-iw-t::after {
+               background: #0a1a30 !important;
+        }
+		/* === معلومات المسار === */
         .route-info {
             position: fixed;
             top: 120px;
@@ -219,151 +219,84 @@
 
         /* تصميم حاوية الخيارات الرئيسية */
 /* تنسيق حاوية الخيارات الرئيسية */
-.price-options {
-    position: fixed;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    width: 100vw; /* تغطية العرض الكامل */
-    height: 35vh; /* ارتفاع مناسب للشاشة */
-    background: rgba(15, 15, 15, 0.98);
-    backdrop-filter: blur(15px);
-    border-top: 1px solid rgba(255,255,255,0.1);
-    box-shadow: 0 -8px 30px rgba(0,0,0,0.3);
-    overflow-x: auto;
-    overflow-y: hidden;
-    gap: 15px;
-    padding: 15px;
-    scroll-snap-type: x mandatory;
-    z-index: 1000;
-    transform: none !important;
-}
+        .price-options {
+           position: fixed;
+          bottom: 0;
+          left: 0;
+          right: 0;
+          width: 100vw; /* تغطية العرض الكامل */
+          height: 35vh; /* ارتفاع مناسب للشاشة */
+          background: rgba(15, 15, 15, 0.98);
+          backdrop-filter: blur(15px);
+           border-top: 1px solid rgba(255,255,255,0.1);
+           box-shadow: 0 -8px 30px rgba(0,0,0,0.3);
+           overflow-x: auto;
+           overflow-y: hidden;
+          gap: 15px;
+           padding: 15px;
+           scroll-snap-type: x mandatory;
+           z-index: 1000;
+            transform: none !important;
+        }
 
 /* تعديل البطاقات لعرضها بشكل أفقي */
-.price-option {
-    scroll-snap-align: center;
-    flex: 0 0 85%;
-    min-width: 85%;
-    height: 80%;
-    padding: 20px;
-    border-radius: 15px;
-    background: rgba(30, 30, 30, 0.95);
-    border: 1px solid rgba(255,255,255,0.1);
-    box-shadow: 0 4px 15px rgba(0,0,0,0.2);
-    transition: all 0.3s ease;
-    overflow: hidden;
-}
+        .price-option {
+          scroll-snap-align: center;
+          flex: 0 0 85%;
+          min-width: 85%;
+          height: 80%;
+           padding: 20px;
+           border-radius: 15px;
+           background: rgba(30, 30, 30, 0.95);
+           border: 1px solid rgba(255,255,255,0.1);
+           box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+            transition: all 0.3s ease;
+           overflow: hidden;
+        }
 
 /* تحسين التنسيق الداخلي */
-.price-option h3 {
-    font-size: 1.2rem;
-    margin-bottom: 10px;
-    white-space: nowrap;
-}
+        .price-option h3 {
+             font-size: 1.2rem;
+             margin-bottom: 10px;
+             white-space: nowrap;
+        }
 
-.price-option .total-price {
-    font-size: 1.8rem;
-    margin: 15px 0;
-}
+        .price-option .total-price {
+           font-size: 1.8rem;
+           margin: 15px 0;
+        }
 
 /* إصلاح مشكلة التمرير الأفقي */
-.price-options::-webkit-scrollbar {
-    height: 4px;
-}
+        .price-options::-webkit-scrollbar {
+             height: 4px;
+        }
 
-.price-options::-webkit-scrollbar-thumb {
-    background: rgba(0,206,209,0.8);
-    border-radius: 2px;
-}
-/* تنسيق الخيارات للشاشات الصغيرة */
-@media (max-width: 768px) {
-    .price-options {
-        display: grid;
-        grid-template-columns: repeat(3, 1fr); /* 3 أعمدة متساوية */
-        gap: 8px;
-        height: 22vh; 
-        padding: 8px;
-        overflow: visible;
-        box-shadow: none;
-        border-top: none;
-		    bottom: 25vh; /* رفع الحاوية 25% من أسفل الشاشة */
+        .price-options::-webkit-scrollbar-thumb {
+             background: rgba(0,206,209,0.8);
+            border-radius: 2px;
+        }
+        .gm-style-iw-c {
+            box-shadow: 0 0 20px rgba(0, 206, 209, 0.5) !important;
+            border-radius: 15px !important;
+            background: linear-gradient(145deg, #0a1a30, #0d2342) !important;
+        }
 
-    }
-
-    .price-option {
-        flex: 1;
-        min-width: auto;
-        height: auto;
-        padding: 8px;
-        border-radius: 10px;
-        scroll-snap-align: none;
-    }
-
-    .price-option h3 {
-	    color: #ffffff !important; /* اللون الأبيض */
-    text-shadow: 0 1px 3px rgba(0,0,0,0.3);
-
-        font-size: 0.9rem;
-        flex-direction: column;
-        gap: 4px;
-    }
-
-    .vehicle-icon {
-        font-size: 1.2rem;
-    }
-
-    .total-price {
-        font-size: 1rem;
-        margin: 8px 0;
-    }
-
-    .vehicle-details-short {
-        display: none;
-    }
-}
-
-/* تعديلات إضافية للشاشات الصغيرة جدًا */
-@media (max-width: 480px) {
-    .price-options {
-        grid-template-columns: 1fr; /* عمود واحد */
-        gap: 6px;
-    }
-    
-    .price-option {
-        width: 100%;
-        padding: 10px;
-    }
-    
-    .price-option h3 {
-        font-size: 0.85rem;
-    }
-    
-    .total-price {
-        font-size: 0.9rem;
-    }
-}
-.gm-style-iw-c {
-    box-shadow: 0 0 20px rgba(0, 206, 209, 0.5) !important;
-    border-radius: 15px !important;
-    background: linear-gradient(145deg, #0a1a30, #0d2342) !important;
-}
-
-.gm-style .gm-style-iw-t::after {
-    background: linear-gradient(145deg, #0a1a30, #0d2342) !important;
-    box-shadow: -5px -5px 15px rgba(10, 26, 48, 0.5),
+        .gm-style .gm-style-iw-t::after {
+             background: linear-gradient(145deg, #0a1a30, #0d2342) !important;
+             box-shadow: -5px -5px 15px rgba(10, 26, 48, 0.5),
                 5px 5px 15px rgba(0, 0, 0, 0.3) !important;
-}
+        }
         .price-option:hover {
-            transform: scale(1.05);
+             transform: scale(1.05);
         }
 
         .price-option.selected {
-    background: rgba(46, 46, 46, 0.7) !important; /* زيادة الشفافية */
+            background: rgba(46, 46, 46, 0.7) !important; /* زيادة الشفافية */
             color: var(--secondary-color);
             box-shadow: 0 4px 15px rgba(0, 206, 209, 0.4);
         
 		}
-
+        /* === تفاصيل الحجز === */
         .booking-details {
             position: fixed;
             top: 50%;
@@ -402,7 +335,7 @@
         font-size: 0.7rem !important;
     }
 
-
+         /* === التحميل === */
         .loading-overlay {
             position: fixed;
             top: 0;
@@ -425,7 +358,7 @@
             border-radius: 50%;
             animation: spin 1s linear infinite;
         }
-
+         /* === الموقع الحالي === */
         .current-location-btn {
             position: absolute;
             left: 10px;
@@ -456,9 +389,9 @@
             transform: none !important;
             background: rgba(46, 46, 46, 0.9);
 			    /* تقليل الحجم */
-    width: 200px;
-    max-height: 40vh;
-    overflow: hidden;
+             width: 200px;
+            max-height: 40vh;
+              overflow: hidden;
             padding: 20px;
             border-radius: 8px;
             z-index: 1000;
@@ -600,92 +533,6 @@
         font-size: 24px;
         margin: 20px 0;
         }
-    @media (max-width: 768px) {
-    .profile-btn {
-        position: fixed !important;
-        bottom: 1px !important;
-        left: 15px !important;
-        right: auto !important;
-        top: auto !important;
-        transform: none !important;
-        margin: 0 !important;
-        z-index: 1001 !important;
-        padding: 10px 5px !important;
-        width: auto !important;
-  background: linear-gradient(
-    135deg,
-    rgba(76, 175, 80, 0.9) 0%,    /* أخضر شفاف */
-    rgba(255, 82, 82, 0.9) 100%   /* أحمر شفاف */
-  ) !important;
-  border: none !important;
-  border-radius: 25px !important;
-  color: white !important;
-  box-shadow: 
-    0 8px 32px rgba(76, 175, 80, 0.3),
-    0 4px 12px rgba(255, 255, 255, 0.1) inset !important;
-  transition: all 0.4s cubic-bezier(0.215, 0.61, 0.355, 1) !important;
-  overflow: hidden !important;
-  backdrop-filter: blur(8px) !important;
-  border: 1px solid rgba(255, 255, 255, 0.2) !important;
-    /* حدود متحركة */
-   
-	}
-/* أيقونة البروفيل المعدلة */
-.profile-btn .fa-chevron-left {
-  color: rgba(255, 255, 255, 0.9) !important;
-  transition: all 0.3s ease !important;
-  font-size: 14px !important;
-}
-    .profile-text {
-  position: relative;
-  z-index: 1;
-  text-shadow: 
-    0 2px 4px rgba(0, 0, 0, 0.3),
-    0 0 8px rgba(76, 175, 80, 0.5) !important;
-  transition: all 0.3s ease !important;
-}
-.profile-btn:hover .profile-text {
-  text-shadow: 
-    0 3px 6px rgba(0, 0, 0, 0.4),
-    0 0 12px rgba(255, 82, 82, 0.6) !important;
-}
-	/* تأثير حدود متحركة */
-.profile-btn::before {
-  content: '';
-  position: absolute;
-  top: -2px;
-  left: -2px;
-  right: -2px;
-  bottom: -2px;
-  background: linear-gradient(
-    45deg,
-    #4CAF50 0%,
-    #FF5252 50%,
-    #4CAF50 100%
-  );
-  z-index: -1;
-  border-radius: 25px;
-  animation: border-flow 3s linear infinite;
-  background-size: 200% auto;
-}
-
-    .profile-btn i {
-        font-size: 14px !important;
-        margin-right: 5px !important;
-    }
-	@keyframes border-flow {
-  0% { background-position: 0% center; }
-  100% { background-position: -200% center; }
-}
-
-    /* منع تداخل مع الأزرار الأخرى */
-    .action-buttons {
-        left: 50% !important;
-        transform: translateX(-50%) !important;
-        width: 90% !important;
-        bottom: 80px !important; /* زيادة البعد عن الأسفل */
-    }
-}
 .pulsating-marker {
     animation: pulse 1.5s infinite;
     text-shadow: 0 0 10px currentColor;
@@ -865,27 +712,7 @@
     .payment-option:hover {
       transform: scale(1.02);
     }
-@media (max-width: 768px) {
-    .driver-info, .persistent-notification {
-        /* تقليل الحجم العام */
-        width: 60%;
-        max-width: 150px;
-        padding: 5px;
-        
-        /* تعديل الخطوط */
-        font-size: 0.6rem;
-        
-        /* تقليل الهوامش */
-        margin: 5px;
-        top: 5px !important;
-        
-        /* إخفاء العناصر غير الضرورية */
-        .extra-details {
-            display: none;
-        }
-    }
-    
-    /* عناوين الرسائل */
+   /* عناوين الرسائل */
     .driver-info h3, .persistent-notification h3 {
         font-size: 1rem;
         margin-bottom: 8px;
@@ -906,8 +733,7 @@
     .toggle-info-btn i {
         font-size: 14px;
     }
-}
-    #confirmBookingButton {
+#confirmBookingButton {
       display: none;
       margin-top: 20px; 
     
@@ -919,56 +745,13 @@
     stroke-dasharray: none !important;
      }
 	
-	/* ======= زر البروفيل ======= */
-.profile-btn {
-  /* أضف خلفية شفافة أو لون ثابت */
-      background: linear-gradient(45deg, #FF69B4, #FF1493);     /* أو أي لون تفضله */
-  border: 2px solid var(--accent-color); /* سمك الإطار ولونه */
-  border-radius: 30px;                   /* نصف قطر الانحناء */
-  padding: 8px 10px;                    /* الارتفاع والعرض الداخلي */
-  font-size: 18px;                       /* حجم الخط */
-  color: var(--secondary-color);         /* لون النص */
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  transition: all 0.3s;
-     box-shadow: 0 4px 15px rgba(255,105,180,0.4);
 
-    /* حدود متحركة */
-    border: none;
-    position: relative;
-    overflow: hidden;
-
-}
-
-.profile-btn:hover {
-  background: var(--accent-color);
-  color: #FFF;
-  transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(0,0,0,0.2);
-}
-.profile-btn .fa-chevron-left {
-  font-size: 16px;    /* حجم الأيقونة */
-  transition: transform 0.3s;
-}
-.profile-btn:hover .fa-chevron-left {
-  transform: translateX(-4px);
-}
 
 .marker-label {
     background: rgba(0, 206, 209, 0.9);
     padding: 2px 8px;
     border-radius: 15px;
     box-shadow: 0 2px 5px rgba(0,0,0,0.3);
-}
-@media (max-width: 768px) {
-    .booking-details p,
-    .booking-details .vehicle-type,
-    .booking-details .total-price {
-        line-height: 0.7 !important;
-        margin: 2px 0 !important;
-    
-	}
 }
 .full-screen-map {
     height: 100vh !important;
@@ -1359,17 +1142,311 @@ button[onclick="clearAll()"]:hover::before {
     margin: 10px 0;
     font-size: 16px;
 }
+    @media (max-width: 768px) {
+    .price-options {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr); /* 3 أعمدة متساوية */
+        gap: 8px;
+        height: 22vh; 
+        padding: 8px;
+        overflow: visible;
+        box-shadow: none;
+        border-top: none;
+		    bottom: 30vh; /* رفع الحاوية 25% من أسفل الشاشة */
 
+    }
+
+    .price-option {
+        flex: 1;
+        min-width: auto;
+        height: auto;
+        padding: 8px;
+        border-radius: 10px;
+        scroll-snap-align: none;
+    }
+
+    .price-option h3 {
+	    color: #ffffff !important; /* اللون الأبيض */
+    text-shadow: 0 1px 3px rgba(0,0,0,0.3);
+
+        font-size: 0.9rem;
+        flex-direction: column;
+        gap: 4px;
+    }
+
+    .vehicle-icon {
+        font-size: 1.2rem;
+    }
+
+    .total-price {
+        font-size: 1rem;
+        margin: 8px 0;
+    }
+
+    .vehicle-details-short {
+        display: none;
+    }
+    }
+
+/* تعديلات إضافية للشاشات الصغيرة جدًا */
+@media (max-width: 480px) {
+    .price-options {
+        grid-template-columns: 1fr; /* عمود واحد */
+        gap: 6px;
+    }
+    
+    .price-option {
+        width: 100%;
+        padding: 10px;
+    }
+    
+    .price-option h3 {
+        font-size: 0.85rem;
+    }
+    
+    .total-price {
+        font-size: 0.9rem;
+    }
+}
+@media (max-width: 768px) {
+
+    
+ 
+
+    /* منع تداخل مع الأزرار الأخرى */
+    .action-buttons {
+        left: 50% !important;
+        transform: translateX(-50%) !important;
+        width: 90% !important;
+        bottom: 80px !important; /* زيادة البعد عن الأسفل */
+    }
+}
+@media (max-width: 768px) {
+    .driver-info, .persistent-notification {
+        /* تقليل الحجم العام */
+        width: 60%;
+        max-width: 150px;
+        padding: 5px;
+        
+        /* تعديل الخطوط */
+        font-size: 0.6rem;
+        
+        /* تقليل الهوامش */
+        margin: 5px;
+        top: 5px !important;
+        
+        /* إخفاء العناصر غير الضرورية */
+        .extra-details {
+            display: none;
+        }
+    }
+@media (max-width: 768px) {
+    .booking-details p,
+    .booking-details .vehicle-type,
+    .booking-details .total-price {
+        line-height: 0.7 !important;
+        margin: 2px 0 !important;
+    
+	}
+}
+/* ======= أنماط الشريط الجانبي ======= */
+.sidebar {
+    position: fixed;
+    right: -300px;
+    top: 0;
+    width: 300px;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.95);
+    backdrop-filter: blur(20px);
+    z-index: 2000;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: -5px 0 30px rgba(0,0,0,0.3);
+    display: flex;
+    flex-direction: column;
+    border-left: 1px solid rgba(255,255,255,0.1);
+}
+
+.sidebar.active {
+    right: 0;
+}
+
+/* ترويسة الشريط */
+.sidebar-header {
+    padding: 30px 25px;
+    border-bottom: 1px solid rgba(255,255,255,0.08);
+    margin-bottom: 20px;
+    flex-shrink: 0;
+}
+
+/* زر البروفيل في الترويسة */
+.sidebar-header .profile-btn {
+    display: flex;
+    align-items: center;
+    gap: 18px;
+    color: #fff;
+    text-decoration: none;
+    padding: 15px 25px;
+    border-radius: 15px;
+    background: linear-gradient(135deg, rgba(0,206,209,0.15), rgba(0,206,209,0.05));
+    transition: all 0.4s;
+    border: 1px solid rgba(0,206,209,0.2);
+}
+
+.sidebar-header .profile-btn i {
+    font-size: 1.6em;
+    color: #00CED1;
+    transition: transform 0.3s;
+}
+
+.sidebar-header .profile-btn span {
+    font-size: 1.1em;
+    font-weight: 500;
+    letter-spacing: 0.5px;
+}
+
+.sidebar-header .profile-btn:hover {
+    background: linear-gradient(135deg, rgba(0,206,209,0.25), rgba(0,206,209,0.15));
+    transform: translateX(10px);
+    box-shadow: 0 5px 15px rgba(0,206,209,0.2);
+}
+
+.sidebar-header .profile-btn:hover i {
+    transform: scale(1.1);
+}
+
+/* زر القائمة (الهامبرجر) */
+.menu-toggle {
+    position: fixed;
+    bottom: 25px;
+    right: 25px;
+    z-index: 2100;
+    background: rgba(0, 206, 209, 0.9);
+    border: none;
+    width: 50px;
+    height: 50px;
+    border-radius: 15px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.4s;
+    box-shadow: 0 5px 15px rgba(0,206,209,0.3);
+}
+
+.menu-toggle:hover {
+    background: #00CED1;
+    transform: scale(1.05);
+}
+
+.hamburger {
+    width: 28px;
+    height: 2px;
+    background: #fff;
+    position: relative;
+    transition: all 0.3s;
+}
+
+.hamburger::before,
+.hamburger::after {
+    content: '';
+    position: absolute;
+    width: 100%;
+    height: 2px;
+    background: #fff;
+    transition: all 0.3s;
+}
+
+.hamburger::before {
+    top: -8px;
+}
+
+.hamburger::after {
+    top: 8px;
+}
+
+.menu-toggle.active .hamburger {
+    background: transparent;
+}
+
+.menu-toggle.active .hamburger::before {
+    transform: rotate(45deg);
+    top: 0;
+}
+
+.menu-toggle.active .hamburger::after {
+    transform: rotate(-45deg);
+    top: 0;
+}
+
+/* تأثيرات إضافية للشريط عند الفتح */
+.sidebar.active::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(45deg, 
+        rgba(0,206,209,0.05) 0%, 
+        rgba(0,206,209,0.01) 100%);
+    pointer-events: none;
+}
+
+/* الظل الداخلي للشريط */
+.sidebar::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -10px;
+    width: 10px;
+    height: 100%;
+    background: linear-gradient(to left, 
+        rgba(0,0,0,0.15), 
+        rgba(0,0,0,0));
+}
+
+/* أنماط متجاوبة للشاشات الصغيرة */
+@media (max-width: 768px) {
+    .sidebar {
+        width: 260px;
+        right: -260px;
+    }
+
+    .menu-toggle {
+        bottom: 20px;
+        right: 20px;
+        width: 45px;
+        height: 45px;
+		 background:  #111;  /* اجعل الخلفية سوداء */
+
+    }
+
+    .sidebar-header {
+        padding: 25px 20px;
+    }
+
+    .sidebar-header .profile-btn {
+        padding: 12px 20px;
+        gap: 15px;
+    }
+
+    .sidebar-header .profile-btn span {
+        font-size: 1em;
+    }
+}
+
+/* منع التمرير عند فتح الشريط */
+body.sidebar-active {
+    overflow: hidden;
+}
+    
     </style>
 </head>
 <body>
      <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 	<div class="control-panel">
     <div class="user-controls">
-       <button class="profile-btn" onclick="window.location.href='profile.html'">
-    <span class="profile-text">البروفيل</span>
-    <i class="fas fa-chevron-left"></i> <!-- سهم للأنيميشن -->
-</button>
+    
     </div>
         <div class="control-panel">
     <div class="input-field">
@@ -1463,7 +1540,20 @@ button[onclick="clearAll()"]:hover::before {
         <p id="driverCar">السيارة: -</p>
         <p id="driverPhone">الهاتف: -</p>
 	</div>
+<div class="sidebar" id="sidebar">
+    <!-- زر البروفيل في الأعلى -->
+    <div class="sidebar-header">
+        <a href="profile.html" class="profile-btn">
+            <i class="fas fa-user"></i>
+            <span>البروفيل</span>
+        </a>
+    </div>
 
+</div>
+<!-- زر فتح الشريط -->
+<button class="menu-toggle" id="menuToggle">
+    <div class="hamburger"></div>
+</button>
 <!-- أضف هذا الجزء تحت عنصر driver-info -->
     <div class="persistent-notification" id="persistentNotification">
       <h3>حالة الرحلة</h3>
@@ -1658,8 +1748,8 @@ async function getCurrentLocationSilently() {
         const position = await new Promise((resolve, reject) => {
             navigator.geolocation.getCurrentPosition(resolve, reject, {
                 enableHighAccuracy: true,
-                timeout: 5000,
-                maximumAge: 30000
+                timeout: 9000,
+                maximumAge: 80000
             });
         });
         
@@ -1804,7 +1894,24 @@ async function validateInputs() {
         return false;
     }
 }
+// toggle sidebar
+document.getElementById('menuToggle').addEventListener('click', function() {
+    this.classList.toggle('active');
+    document.getElementById('sidebar').classList.toggle('active');
+    document.body.classList.toggle('sidebar-active');
+});
 
+// إغلاق الشريط عند النقر خارج المنطقة
+document.addEventListener('click', function(e) {
+    const sidebar = document.getElementById('sidebar');
+    const menuToggle = document.getElementById('menuToggle');
+    
+    if (!sidebar.contains(e.target) && !menuToggle.contains(e.target)) {
+        sidebar.classList.remove('active');
+        menuToggle.classList.remove('active');
+        document.body.classList.remove('sidebar-active');
+    }
+});
 // دالة مساعدة للجيوكود
 function geocodeAddress(address) {
     return new Promise((resolve, reject) => {
@@ -2111,7 +2218,7 @@ function handleGeolocationError(error) {
         top: mapElement.style.top,
         left: mapElement.style.left
     };
-		 document.querySelector('.profile-btn').style.display = 'none';
+		 document.querySelector('.profile-btn').style.display = 'block';
     document.getElementById('map').classList.add('full-screen-map');
     document.getElementById('priceButton').style.display = 'none';
 
@@ -2248,7 +2355,7 @@ function updatePriceOptions(distance) {
           });
           document.getElementById('confirmBookingButton').style.display = 'none';
           selectedPayment = null;
-		       document.querySelector('.profile-btn').style.display = 'none';
+		       document.querySelector('.profile-btn').style.display = 'block';
 		}
 
         async function confirmTrip() {
@@ -2269,7 +2376,7 @@ function updatePriceOptions(distance) {
 
             showLoading(true);
         // إخفاء العناصر هنا
-		     document.querySelector('.profile-btn').style.display = 'none';
+		     document.querySelector('.profile-btn').style.display = 'block';
                                                 document.querySelector('.action-buttons').style.display = 'none';
       			  document.getElementById('map').style.display = 'block'; // إضافة هذا السطر
        			  document.querySelector('.input-field').style.display = 'none';
@@ -2305,7 +2412,7 @@ function updatePriceOptions(distance) {
 
                 setupTripListener();
                 showNotification('جاري البحث عن سائق...');
-                 document.querySelector('.profile-btn').style.display = 'none';
+                 document.querySelector('.profile-btn').style.display = 'block';
  document.querySelector('.action-buttons').style.display = 'none';
       			  document.getElementById('map').style.display = 'block'; // إضافة هذا السطر
        			  document.querySelector('.input-field').style.display = 'none';
@@ -2395,7 +2502,7 @@ window.addEventListener('beforeunload', () => {
 			     document.getElementById('map').classList.add('full-screen-map');
 
 			    document.getElementById('persistentNotification').style.display = 'nono';
-				     document.querySelector('.profile-btn').style.display = 'none';
+				     document.querySelector('.profile-btn').style.display = 'block';
 			       clearDriverTracking();
 				       if (startMarker) startMarker.setMap(null);
                      if (endMarker) endMarker.setMap(null);
@@ -2449,7 +2556,7 @@ window.addEventListener('beforeunload', () => {
        			  document.querySelector('.input-field').style.display = 'none';
                   document.getElementById('origin').parentNode.style.display = 'none';
                    document.getElementById('destination').parentNode.style.display = 'none';
-                     document.querySelector('.profile-btn').style.display = 'none';
+                     document.querySelector('.profile-btn').style.display = 'block';
                     return;
                 }
                 if (tripData.status === "end") {
@@ -2482,7 +2589,7 @@ window.addEventListener('beforeunload', () => {
         directionsRenderer = null;
     }
     
-				     document.querySelector('.profile-btn').style.display = 'none';
+				     document.querySelector('.profile-btn').style.display = 'block';
 		            document.getElementById('map').style.display = 'none';
                     document.querySelector('.control-panel').style.display = 'none';
                     document.querySelector('.action-buttons').style.display = 'none';
@@ -2550,7 +2657,7 @@ window.addEventListener('beforeunload', () => {
                   
 				  
 				  startMarker.setPosition(tripData.startLocation); // تحديث الإحداثيات
-				       document.querySelector('.profile-btn').style.display = 'none';
+				       document.querySelector('.profile-btn').style.display = 'block';
                 // إخفاء عناصر الواجهة
                    document.querySelector('.action-buttons').style.display = 'none';
 			       document.getElementById('map').style.display = 'block'; // إضافة هذا السطر
